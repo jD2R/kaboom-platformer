@@ -1,0 +1,89 @@
+<!-- import the kaboom library -->
+<script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+
+<script type="module">
+
+    kaboom({
+        background: [255, 255, 255]
+    });
+
+    loadSprite("player", "/sprites/character_0000.png");
+    loadSprite("block", "/sprites/tile_0000.png");
+
+    const LEVELS = [
+        [
+            "#              #",
+            "#              #",
+            "#              #",
+            "#              #",
+            "#              #",
+            "#           ####",
+            "#              #",
+            "#     ####     #",
+            "###            #",
+            "#    #         #",
+            "#    ###     ###",
+            "#           ####",
+            "#         ######",
+            "#         ######",
+            "################",
+        ]
+    ]
+    const levelConfig = {
+
+        width: 72,
+        height: 72,
+
+        '#': () => [
+            sprite("block"),
+            area(),
+            solid(),
+            scale(4)
+        ]
+
+    }
+
+    scene("game", () => {
+
+        const level = addLevel(LEVELS[0], levelConfig);
+
+        const player = add([
+            sprite("player"),
+            pos(120, 600),
+            area(),
+            body(),
+            scale(2.5),
+        ])
+        player.flipX(1);
+
+        onKeyDown('left', () => {
+            player.flipX(0);
+            player.move(-400, 0);
+        })
+
+        onKeyDown('right', () => {
+            player.flipX(1);
+            player.move(400, 0);
+        })
+
+        onKeyDown('up', () => {
+            if (player.isGrounded()) {
+                player.jump(750);
+            }
+        })
+
+        player.onUpdate(() => {
+            camPos(player.pos);
+        })
+
+    })
+
+go("game");
+    
+</script>
+
+<!-- 
+    1. Run cd Desktop\Coding\kaboom-test in the command line.
+    2. Run python -m http.server in the command line.
+    3. Go to http://localhost:8000/index.html to view the page.
+-->
